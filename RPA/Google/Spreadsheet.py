@@ -44,7 +44,7 @@ class Spreadsheet(object):
         })
         values = result.get('values', [])
         sheet = pd.DataFrame(values, columns=values[0])
-        sheet = sheet.drop(0)
+        sheet = sheet.drop(drop=True)
         sheet = sheet.reset_index()
 
         logger.info({
@@ -142,7 +142,7 @@ class Spreadsheet(object):
             'action': 'delete_sheet',
             'status': 'running',
             'message':{
-                'sheet_name':sheet_id
+                'sheet_id':sheet_id
             }
         })
 

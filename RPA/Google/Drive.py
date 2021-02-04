@@ -74,8 +74,9 @@ class Drive(object):
                 'status': 'Success!',
             })
 
-    def upload(self, file_path: str, file_name: str, drive_id: str):
+    def upload(self, drive_id: str, file_path: str):
         mime = mimetypes.guess_type(f"{file_path}")[0]
+        file_name = os.path.basename(file_path)
         file_set = self.drive.CreateFile({
             'title': file_name,
             'mimeType': mime,
