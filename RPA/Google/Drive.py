@@ -14,12 +14,13 @@ class DriveMetadata(object):
     @property
     def drive_meta_dict(self) -> dict:
         meta_dict: dict = {}
-        id_dict: dict = {}
+        meta_list: list = {}
         for i in range(len(self.file_titles)):
-            id_dict['id'] = self.file_ids[i]
-            meta_dict[self.file_titles[i]] = id_dict.copy()
+            meta_dict['title'] = self.file_titles[i]
+            meta_dict['id'] = self.file_ids[i]
+            meta_list.append(meta_dict.copy())
 
-        return meta_dict
+        return meta_list
 
 
 class Drive(object):

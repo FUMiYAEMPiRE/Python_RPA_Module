@@ -12,13 +12,14 @@ class SpreadsheetMetadata(object):
 
     @property
     def sheet_meta_dict(self) -> list:
-        title_dict: dict = {}
-        id_dict: dict = {}
+        meta_dict: dict = {}
+        meta_list: list = []
         for i in range(len(self.sheet_titles)):
-            id_dict['id'] = self.sheet_ids[i]
-            title_dict[self.sheet_titles[i]] = id_dict.copy()
+            meta_dict['title'] = self.sheet_titles[i]
+            meta_dict['id'] = self.sheet_ids[i]
+            meta_list.append(meta_dict.copy())
 
-        return title_dict
+        return meta_list
 
 
 class Spreadsheet(object):
