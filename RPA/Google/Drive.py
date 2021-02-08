@@ -121,7 +121,7 @@ class Drive(object):
             })
             raise
 
-    def file_lists(self, drive_id: str) -> DriveMetadata.drive_meta_dict:
+    def load_files(self, drive_id: str) -> DriveMetadata.drive_meta_dict:
         query = f"'{drive_id}' in parents and trashed=false"
         file_list = self.drive.ListFile({'q': query}).GetList()
 
@@ -131,7 +131,7 @@ class Drive(object):
         meta = DriveMetadata(file_ids, file_titles)
         return meta.drive_meta_dict
     
-    def create_folder(self, drive_id: str, folder_name: str):
+    def create_folder(self, drive_id: str, folder_name: str) -> str:
         folder = self.drive.CreateFile({
             'title': folder_name,
             'mimeType': 'application/vnd.google-apps.folder',

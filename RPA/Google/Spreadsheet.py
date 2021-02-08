@@ -31,7 +31,7 @@ class Spreadsheet(object):
                 cred = pickle.load(token)
         self.spreadsheet = build('sheets', 'v4', cache_discovery=False, credentials=cred).spreadsheets()
 
-    def get_table(self, range_: str) -> pd.DataFrame:
+    def load_table(self, range_: str) -> pd.DataFrame:
         result = self.spreadsheet.values().get(
             spreadsheetId=self.spreadsheet_id, range=range_).execute()
 
@@ -53,7 +53,7 @@ class Spreadsheet(object):
         })
         return sheet
 
-    def get_values(self, range_: str) -> list:
+    def load_values(self, range_: str) -> list:
         result = self.spreadsheet.values().get(
             spreadsheetId=self.spreadsheet_id, range=range_).execute()
         values = result.get('values', [])
@@ -66,7 +66,7 @@ class Spreadsheet(object):
         })
         return values
 
-    def set_dataframe(self, range_: str, dataframe):
+    def append_dataframe(self, range_: str, dataframe):
         logger.info({
             'action': 'set_dataframe',
             'status': 'running',
@@ -94,7 +94,7 @@ class Spreadsheet(object):
             'status': 'Success!',
         })
 
-    def get_metadata(self) -> SpreadsheetMetadata.sheet_meta_dict:
+    def load_metadata(self) -> SpreadsheetMetadata.sheet_meta_dict:
         sheet_metadata = self.spreadsheet.get(
             spreadsheetId=self.spreadsheet_id).execute()
         sheets = sheet_metadata.get('sheets', '')

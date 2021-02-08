@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 
 
-def get_env(env_name: str):
+def get_env(env_name: str) -> str:
     load_dotenv(verbose=True)
     try:
         dotenv_path = os.path.join(os.path.dirname(__file__), '.env')

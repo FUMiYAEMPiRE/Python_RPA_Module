@@ -5,3 +5,7 @@
 *.json
 *.pickle
 *.yaml
+setup.py
+build/
+dist/
+fepr-py-rpa.egg-info/
