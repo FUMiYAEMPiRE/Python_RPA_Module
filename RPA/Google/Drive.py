@@ -12,9 +12,9 @@ class DriveMetadata(object):
         self.file_titles = file_titles
 
     @property
-    def drive_meta_dict(self) -> dict:
+    def drive_meta_dict(self) -> list:
         meta_dict: dict = {}
-        meta_list: list = {}
+        meta_list: list = []
         for i in range(len(self.file_titles)):
             meta_dict['title'] = self.file_titles[i]
             meta_dict['id'] = self.file_ids[i]
@@ -53,27 +53,27 @@ class Drive(object):
             })
 
             f.Trash()
-        
+
         logger.info({
-                'action': 'all_trash',
-                'status': 'Success!',
-                })
-            
+            'action': 'all_trash',
+            'status': 'Success!',
+        })
+
     def trash(self, file_id: str):
         logger.info({
-                'action': 'trash',
-                'status': 'Success!',
-                'message':{
+            'action': 'trash',
+            'status': 'Success!',
+            'message': {
                     'file_id': file_id
-                }
-            })
+                    }
+        })
 
         f = self.drive.CreateFile({'id': file_id})
         f.Trash()
         logger.info({
-                'action': 'trash',
-                'status': 'Success!',
-            })
+            'action': 'trash',
+            'status': 'Success!',
+        })
 
     def upload(self, drive_id: str, file_path: str):
         mime = mimetypes.guess_type(f"{file_path}")[0]
@@ -85,14 +85,14 @@ class Drive(object):
         })
 
         logger.info({
-                'action': 'upload',
-                'status': 'running',
-                'message':{
+            'action': 'upload',
+            'status': 'running',
+            'message': {
                     'file_path': file_path,
                     'file_name': file_name,
                     'drive_id': drive_id
-                }
-            })
+                    }
+        })
         file_set.SetContentFile(f"{file_path}")
         file_set.Upload()
 
@@ -108,7 +108,8 @@ class Drive(object):
             for i in range(len(file_id)):
                 if file_name == file_id[i]["title"]:
                     f = self.drive.CreateFile({'id': file_id[i]["id"]})
-                    f.GetContentFile(os.path.join(download_dir_path, file_id[i]["title"]))
+                    f.GetContentFile(os.path.join(
+                        download_dir_path, file_id[i]["title"]))
                     logger.info({
                         'action': 'download',
                         'status': 'Success!',
@@ -131,7 +132,7 @@ class Drive(object):
 
         meta = DriveMetadata(file_ids, file_titles)
         return meta.drive_meta_dict
-    
+
     def create_folder(self, drive_id: str, folder_name: str) -> str:
         folder = self.drive.CreateFile({
             'title': folder_name,

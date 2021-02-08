@@ -30,7 +30,8 @@ class Spreadsheet(object):
         if os.path.exists('token.pickle'):
             with open('token.pickle', 'rb') as token:
                 cred = pickle.load(token)
-        self.spreadsheet = build('sheets', 'v4', cache_discovery=False, credentials=cred).spreadsheets()
+        self.spreadsheet = build(
+            'sheets', 'v4', cache_discovery=False, credentials=cred).spreadsheets()
 
     def load_table(self, range_: str) -> pd.DataFrame:
         result = self.spreadsheet.values().get(
@@ -45,8 +46,8 @@ class Spreadsheet(object):
         })
         values = result.get('values', [])
         sheet = pd.DataFrame(values, columns=values[0])
-        sheet = sheet.drop(drop=True)
-        sheet = sheet.reset_index()
+        sheet = sheet.drop(0)
+        sheet = sheet.reset_index(drop=True)
 
         logger.info({
             'action': 'get_table',
@@ -121,8 +122,8 @@ class Spreadsheet(object):
         logger.info({
             'action': 'create_sheet',
             'status': 'running',
-            'message':{
-                'sheet_name':sheet_name
+            'message': {
+                'sheet_name': sheet_name
             }
         })
 
@@ -130,8 +131,8 @@ class Spreadsheet(object):
         response = self.spreadsheet.batchUpdate(
             spreadsheetId=self.spreadsheet_id, body=body).execute()
         sheetid = response['replies'][0]['addSheet']['properties']['sheetId']
-        return {'sheet_id':sheetid}
-    
+        return {'sheet_id': sheetid}
+
     def delete_sheet(self, sheet_id: str):
         requests = [{
             'deleteSheet': {
@@ -142,17 +143,16 @@ class Spreadsheet(object):
         logger.info({
             'action': 'delete_sheet',
             'status': 'running',
-            'message':{
-                'sheet_id':sheet_id
+            'message': {
+                'sheet_id': sheet_id
             }
         })
 
         body = {'requests': requests}
         self.spreadsheet.batchUpdate(
             spreadsheetId=self.spreadsheet_id, body=body).execute()
-        
+
         logger.info({
             'action': 'delete_sheet',
             'status': 'Success!'
         })
-
