@@ -2,6 +2,7 @@ from googleapiclient.discovery import build
 import pickle
 import os
 import pandas as pd
+from pandas.core.frame import DataFrame
 from ..logger import logger
 
 
@@ -33,7 +34,7 @@ class Spreadsheet(object):
         self.spreadsheet = build(
             'sheets', 'v4', cache_discovery=False, credentials=cred).spreadsheets()
 
-    def load_table(self, range_: str) -> pd.DataFrame:
+    def load_table(self, range_: str) -> DataFrame:
         result = self.spreadsheet.values().get(
             spreadsheetId=self.spreadsheet_id, range=range_).execute()
 
@@ -62,13 +63,10 @@ class Spreadsheet(object):
         logger.info({
             'action': 'get_values',
             'status': 'Success!',
-            'message': {
-                'value': values
-            }
         })
         return values
 
-    def append_dataframe(self, range_: str, dataframe):
+    def append_dataframe(self, range_: str, dataframe: DataFrame):
         logger.info({
             'action': 'set_dataframe',
             'status': 'running',
@@ -78,6 +76,7 @@ class Spreadsheet(object):
         })
         self.spreadsheet.values().append(spreadsheetId=self.spreadsheet_id,
                                          valueInputOption="USER_ENTERED",
+                                         insertDataOption='OVERWRITE',
                                          range=range_,
                                          body={"values": dataframe.values.tolist()}).execute()
 
@@ -86,17 +85,17 @@ class Spreadsheet(object):
             'status': 'Success!',
         })
 
-    def set_values(self, range_: str, values):
+    def set_values(self, range_: str, values: list):
         self.spreadsheet.values().update(spreadsheetId=self.spreadsheet_id,
                                          valueInputOption="USER_ENTERED",
                                          range=range_,
-                                         body={"values": [[values]]}).execute()
+                                         body={"values": values}).execute()
         logger.info({
             'action': 'set_values',
             'status': 'Success!',
         })
 
-    def load_metadata(self) -> SpreadsheetMetadata.sheet_meta_dict:
+    def load_metadata(self) -> list:
         sheet_metadata = self.spreadsheet.get(
             spreadsheetId=self.spreadsheet_id).execute()
         sheets = sheet_metadata.get('sheets', '')
@@ -156,3 +155,9 @@ class Spreadsheet(object):
             'action': 'delete_sheet',
             'status': 'Success!'
         })
+
+    def clear_range(self, range_: str):
+        self.spreadsheet.values().clear(spreadsheetId=self.spreadsheet_id,
+                                        range=range_, body={}).execute()
+        
+        logger.info({'action': 'clear_range', 'status': 'Success!'})
