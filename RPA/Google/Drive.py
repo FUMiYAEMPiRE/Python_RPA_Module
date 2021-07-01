@@ -115,6 +115,8 @@ class Drive(object):
                         'status': 'Success!',
                     })
                     break
+                elif i == len(file_id)-1:
+                    raise ValueError('指定したファイルは見つかりません')
         except Exception as e:
             logger.error({
                 'action': 'download',
