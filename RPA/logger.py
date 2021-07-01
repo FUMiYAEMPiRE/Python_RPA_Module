@@ -1,4 +1,6 @@
-from logging import config, getLogger, DEBUG
+from logging import config, getLogger, DEBUG, INFO
+
+level = INFO
 
 config.dictConfig({
     'version': 1,
@@ -11,17 +13,17 @@ config.dictConfig({
         'consoleHandler': {
             'class': 'logging.StreamHandler',
             'formatter': 'defaltFormatter',
-            'level': DEBUG
+            'level': level
         }
     },
     'root': {
         'handlers': ['consoleHandler'],
-        'level': DEBUG
+        'level': level
     },
     'loggers': {
         'defalt': {
             'handlers': ['consoleHandler'],
-            'level': DEBUG,
+            'level': level,
             'propagate': 0
         }
     }
