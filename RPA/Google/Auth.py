@@ -40,3 +40,5 @@ def auth(client_secrets_json_path):
             flow = InstalledAppFlow.from_client_secrets_file(
                 client_secrets_json_path, scopes)
             cred = flow.run_local_server(port=0)
+            with open('token.pickle', 'wb') as token:
+                pickle.dump(cred, token)
