@@ -5,7 +5,22 @@ from logging import getLogger
 logger = getLogger(__name__)
 
 
-def browser(save_dir: str, headless=False):
+def browser(save_dir: str, driver_download_path=None, headless=False):
+    """Chromeのバージョンに自動で合わせ、seleniumのGoogle-Driverにあらかじめ設定しておいたchrome-driverを返します
+
+    Args:
+        save_dir (str): ドライバーでダウンロードしたファイルの保存先
+        
+        driver_download_path (str): chrome-driverの保存先
+            初期値はNoneになっていますが、他のタスクと同じドライバーを使用すると衝突してしまうので、なるべく指定した方が良い
+
+        headless (bool): ヘッドレスのON,OFF切り替え 初期値はFalse
+            True=ON, False=OFF
+    
+    Note:
+        Chrome-Driverは自動でバージョンを合わせてくれます。
+
+    """
     # ダウンロード先指定
     prefs = {"download.default_directory": save_dir}
 
@@ -22,4 +37,4 @@ def browser(save_dir: str, headless=False):
         chrome_options.add_argument('--headless')
         chrome_options.add_argument('--remote-debugging-port=9222')
 
-    return webdriver.Chrome(ChromeDriverManager().install(), chrome_options=chrome_options)
+    return webdriver.Chrome(ChromeDriverManager(path=driver_download_path).install(), chrome_options=chrome_options)
